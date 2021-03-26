@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.TnsPjMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mmd.entity.TnsPj">
+        <id column="id" property="id" />
+        <result column="uid" property="uid" />
+        <result column="tid" property="tid" />
+        <result column="pjlx" property="pjlx" />
+        <result column="createtime" property="createtime" />
+        <result column="pjnr" property="pjnr" />
+        <result column="oid" property="oid" />
+        <result column="pjlevel" property="pjlevel" />
+        <result column="skill" property="skill" />
+        <result column="attitude" property="attitude" />
+        <result column="onTime" property="onTime" />
+        <result column="support" property="support" />
+        <result column="updatetime" property="updatetime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, uid, tid, pjlx, createtime, pjnr, oid, pjlevel, skill, attitude, onTime, support, updatetime
+    </sql>
+    <update id="updatePjSupport">update fyt_tns_pj set support = support + 1 where id = #{id}</update>
+    <select id="findPjByOrderId" resultType="com.mmd.domain.dto.order.EstimationDTO">
+        select * from fyt_tns_pj where oid=#{id}
+    </select>
+    <select id="getEstimationsByMassagerId" resultType="com.mmd.domain.dto.order.EstimationDTO">
+        select a.*, b.username from fyt_tns_pj a left join fyt_user b on a.uid = b.id where a.tid = #{Estimations.massagerId} order by a.support desc, a.id desc
+    </select>
+
+    <select id="getEstimationsByMassagerIdAndType" resultType="com.mmd.domain.dto.order.EstimationDTO">
+        select a.*, b.username from fyt_tns_pj a left join fyt_user b on a.uid = b.id where a.pjlx=#{Estimations.type} and a.tid = #{Estimations.massagerId} order by a.support desc, a.id desc
+    </select>
+
+    <select id="getPjLevelById" resultType="java.lang.String">select avg(pjlevel) from fyt_tns_pj where tid=#{Id}</select>
+    <select id="getPjNumById" resultType="java.lang.String">select count(id) from fyt_tns_pj where tid=#{Id}</select>
+    <select id="getHplById" resultType="java.lang.String">
+        select count(id) from fyt_tns_pj where pjlx=1 and tid=#{Id}
+    </select>
+
+    <select id="getMassagerParam" resultType="java.util.Map">
+        select avg(pjlevel) as 'avg', count(id) as 'count', (select count(id) from fyt_tns_pj where pjlx=1 and tid = #{tid}) as 'hp' from fyt_tns_pj where tid = #{tid}
+    </select>
+    <select id="getEstimationsByMassagerId2" resultType="com.mmd.entity.Estimation">
+        select a.*, b.username, d.xm, d.tx from fyt_tns_pj a left join fyt_user b on a.uid = b.id left join fyt_order c on a.oid = c.id left join fyt_tns d on c.tid = d.id
+        where d.status='y'
+        <if test="estimations.pid!=null and estimations.pid!=0">
+            and c.pid = #{estimations.pid}
+        </if>
+        <if test="estimations.pids!=null and estimations.pids.size()>0">
+            and c.pid in
+            <foreach item="item" collection="estimations.pids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by a.support desc, a.id desc
+    </select>
+    <select id="getEstimationsByPidAndType" resultType="com.mmd.entity.Estimation">
+        select a.*, b.username, d.xm, d.tx from fyt_tns_pj a left join fyt_user b on a.uid = b.id left join fyt_order c on a.oid = c.id left join fyt_tns d on c.tid = d.id
+        where d.status='y' and a.pjlx = #{estimations.type}
+        <if test="estimations.pid!=null and estimations.pid!=0">
+            and c.pid = #{estimations.pid}
+        </if>
+        <if test="estimations.pids!=null and estimations.pids.size()>0">
+            and c.pid in
+            <foreach item="item" collection="estimations.pids" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by a.support desc, a.id desc
+    </select>
+    <select id="queryPjRecord" resultType="int">
+        select count(1) from fyt_pj_record where type = 1 and pid = #{pid} and uid = #{uid}
+    </select>
+    <select id="findPjNum" resultType="java.util.Map">
+        select pjlx,count(id) as count from fyt_tns_pj where tid=#{tid} GROUP BY pjlx
+    </select>
+
+    <select id="commentNum" resultType="java.util.Map">
+        select a.pjlx, count(1) as count from fyt_tns_pj a left join fyt_order b on a.oid = b.id left join fyt_tns t on a.tid=t.id
+        where b.pid in
+        <foreach item="item" collection="pids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and t.status='y'
+        GROUP BY a.pjlx
+    </select>
+
+    <select id="queryMassagerComments" resultType="java.util.Map">
+        select pjlx, pjlevel from fyt_tns_pj where tid = #{tid}
+    </select>
+
+    <select id="getEstimationByOid" resultType="com.mmd.entity.Estimation">
+        select * from fyt_tns_pj where oid=#{oid}
+    </select>
+    <select id="getGoodCount" resultType="int">
+        select count(a.id) from fyt_tns_pj a LEFT JOIN fyt_order b ON a.oid=b.id WHERE a.tid=b.tid and a.pjlevel=5 and a.skill=5 and a.attitude=5 and a.onTime=5 and b.tid=#{tid} and b.rq>=#{beginTime} and b.rq&lt;#{endTime} and (b.type is null or b.type=3 or b.type=2)
+    </select>
+</mapper>

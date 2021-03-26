@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.ProductMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mmd.entity.Product">
+        <id column="id" property="id"/>
+        <result column="zwbj" property="zwbj"/>
+        <result column="xmmc" property="xmmc"/>
+        <result column="jg" property="jg"/>
+        <result column="fzsj" property="fzsj"/>
+        <result column="qd" property="qd"/>
+        <result column="tp" property="tp"/>
+        <result column="fwnr" property="fwnr"/>
+        <result column="flbj" property="flbj"/>
+        <result column="createtime" property="createtime"/>
+        <result column="status" property="status"/>
+        <result column="qdmax" property="qdmax"/>
+        <result column="city" property="city"/>
+        <result column="ljxd" property="ljxd"/>
+        <result column="saleType" property="saleType"/>
+        <result column="maxTime" property="maxTime"/>
+        <result column="minTime" property="minTime"/>
+        <result column="originalPrice" property="originalPrice"/>
+        <result column="sort" property="sort"/>
+        <result column="platform" property="platform"/>
+        <result column="salary" property="salary"/>
+        <result column="type" property="type"/>
+        <result column="isRecommend" property="isRecommend"/>
+        <result column="category" property="category"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, zwbj, xmmc, jg, fzsj, qd, tp, fwnr, flbj, createtime, status, qdmax, city, ljxd, saleType, maxTime, minTime, originalPrice, sort, platform, salary, type, isRecommend, category
+    </sql>
+    <select id="getProductData" parameterType="com.mmd.domain.dto.input.ProductQueryInputDTO"
+            resultType="com.mmd.domain.dto.output.ProductOutputDTO">
+        select product.*,pj.pjnum from fyt_product product
+        left join (select pid,count(1) as pjnum from
+        fyt_tns_pj p left join fyt_order o on p.oid = o.id
+        left join fyt_tns tns on p.tid=tns.id
+        where tns.status='y' group by pid) pj
+        on product.id = pj.pid
+        where city=(select mc from fyt_city where id=#{pro.cityId})
+        and status='y' and platform in (0,1)
+        <if test="pro.isRecommend != null and pro.isRecommend == 1">
+            and isRecommend=#{pro.isRecommend}
+        </if>
+        <if test="pro.category != null">
+            and category=#{pro.category}
+        </if>
+        order by sort desc
+    </select>
+    <select id="findOnSalePromotion" resultType="com.mmd.entity.Promotion">
+        select * from fyt_promotion where status='y' and restcount>0 and begintime&lt;=unix_timestamp(now()) and endtime>=unix_timestamp(now())
+    </select>
+    <select id="queryLevelInfoByPid" resultType="com.mmd.entity.LevelInfo">
+        select a.lid, b.info, a.extra from fyt_tns_level_refer a left join fyt_tns_level b on a.lid = b.id where a.pid = #{pid} order by a.extra
+    </select>
+    <select id="getLjxdById" resultType="java.lang.Integer">
+        select sum(sl) from fyt_order where pid=#{id}
+    </select>
+    <select id="findNumPromotionsByPid" resultType="com.mmd.entity.NumPromotion">
+        select * from fyt_num_promotion
+        where status='y' and pid=#{pid}
+        order by number
+    </select>
+    <select id="findById" resultType="com.mmd.domain.dto.order.ProductDTO">
+        select * from fyt_product where id=#{id}
+    </select>
+
+    <select id="findByIdTwo" resultType="com.mmd.domain.dto.output.ProductOutputDTO">
+        select * from fyt_product where id=#{id} and status='y'
+    </select>
+    <select id="findProductsByMassagerId" resultType="com.mmd.domain.dto.order.ProductDTO">
+        select * from fyt_product where id in (${sid}) and status='y' and platform in (0,1) order by sort desc
+    </select>
+    <select id="queryProductTimeList" resultType="com.mmd.entity.ProductTime">
+        select * from fyt_product_sj where status = 1 and pid = #{pid} order by id desc
+    </select>
+    <select id="findIdsByCity" resultType="String">
+       select id from fyt_product where city=#{city}
+    </select>
+</mapper>

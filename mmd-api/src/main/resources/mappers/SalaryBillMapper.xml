@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.SalaryBillMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mmd.entity.SalaryBill">
+        <id column="id" property="id" />
+        <result column="tid" property="tid" />
+        <result column="beginDate" property="beginDate" />
+        <result column="endDate" property="endDate" />
+        <result column="status" property="status" />
+        <result column="orderTime" property="orderTime" />
+        <result column="orderMoney" property="orderMoney" />
+        <result column="extraTime" property="extraTime" />
+        <result column="extraMoney" property="extraMoney" />
+        <result column="reward" property="reward" />
+        <result column="diagnosisMoney" property="diagnosisMoney" />
+        <result column="commentMoney" property="commentMoney" />
+        <result column="commentRemark" property="commentRemark" />
+        <result column="subsidy" property="subsidy" />
+        <result column="subsidyRemark" property="subsidyRemark" />
+        <result column="sumSalary" property="sumSalary" />
+        <result column="deposit" property="deposit" />
+        <result column="depositRemark" property="depositRemark" />
+        <result column="createtime" property="createtime" />
+        <result column="confirmtime" property="confirmtime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tid, beginDate, endDate, status, orderTime, orderMoney, extraTime, extraMoney, reward, diagnosisMoney, commentMoney, commentRemark, subsidy, subsidyRemark, sumSalary, deposit, depositRemark, createtime, confirmtime
+    </sql>
+    <select id="getProductData" resultType="com.mmd.entity.SalaryBill">
+        select * from fyt_salary_bill where tid=#{tid} and status in (2,3,4) order by id desc
+    </select>
+    <select id="getSalaryField" resultType="com.mmd.entity.SalaryField">
+        select * from fyt_salary_field
+    </select>
+</mapper>

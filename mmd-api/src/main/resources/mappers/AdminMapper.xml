@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.AdminMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mmd.entity.Admin">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="nickname" property="nickname" />
+        <result column="password" property="password" />
+        <result column="lastlogintime" property="lastlogintime" />
+        <result column="lastloginip" property="lastloginip" />
+        <result column="logincount" property="logincount" />
+        <result column="email" property="email" />
+        <result column="remark" property="remark" />
+        <result column="createtime" property="createtime" />
+        <result column="updatetime" property="updatetime" />
+        <result column="status" property="status" />
+        <result column="cityid" property="cityid" />
+        <result column="isadmin" property="isadmin" />
+        <result column="precinct" property="precinct" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, username, nickname, password, lastlogintime, lastloginip, logincount, email, remark, createtime, updatetime, status, cityid, isadmin, precinct
+    </sql>
+    
+    <select id="findCustomServices" resultType="com.mmd.entity.Admin">
+        select * from fyt_admin where status=2 and isadmin='n'
+    </select>
+</mapper>

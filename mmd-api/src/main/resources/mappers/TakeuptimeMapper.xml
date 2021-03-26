@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.TakeUpTimeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mmd.entity.TakeUpTime">
+        <id column="id" property="id" />
+        <result column="tid" property="tid" />
+        <result column="title" property="title" />
+        <result column="beginTime" property="beginTime" />
+        <result column="endTime" property="endTime" />
+        <result column="isMonOk" property="isMonOk" />
+        <result column="isTuesOk" property="isTuesOk" />
+        <result column="isWedOk" property="isWedOk" />
+        <result column="isThursOk" property="isThursOk" />
+        <result column="isFriOk" property="isFriOk" />
+        <result column="isSatOk" property="isSatOk" />
+        <result column="isSunOk" property="isSunOk" />
+        <result column="isEveryWeek" property="isEveryWeek" />
+        <result column="status" property="status" />
+        <result column="createtime" property="createtime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tid, title, beginTime, endTime, isMonOk, isTuesOk, isWedOk, isThursOk, isFriOk, isSatOk, isSunOk, isEveryWeek, status, createtime
+    </sql>
+
+    <select id="getTimeRecord" resultType="com.mmd.entity.TakeUpTime">
+        select * from fyt_takeuptime where tid=#{tid}
+    </select>
+    
+    <insert id="addTakeUpTime">
+        insert into fyt_takeuptime(tid,title,beginTime,endTime,isMonOk,isTuesOk,isWedOk,isThursOk,isFriOk,isSatOk,isSunOk,isEveryWeek,status,createtime) values (#{t.tid},#{t.title},#{t.beginTime},#{t.endTime},#{t.isMonOk},#{t.isTuesOk},#{t.isWedOk},#{t.isThursOk},#{t.isFriOk},#{t.isSatOk},#{t.isSunOk},#{t.isEveryWeek},#{t.status},UNIX_TIMESTAMP(NOW()))
+    </insert>
+    <delete id="deleteTakeUpTime" >
+        delete from fyt_takeuptime where id=#{id}
+    </delete>
+</mapper>

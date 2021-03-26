@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.AccountStatementMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mmd.entity.AccountStatement">
+        <id column="id" property="id" />
+        <result column="operatetype" property="operatetype" />
+        <result column="operator" property="operator" />
+        <result column="oid" property="oid" />
+        <result column="operatetime" property="operatetime" />
+        <result column="realchange" property="realchange" />
+        <result column="giftchange" property="giftchange" />
+        <result column="status" property="status" />
+        <result column="tradeno" property="tradeno" />
+        <result column="aid" property="aid" />
+        <result column="rid" property="rid" />
+        <result column="realbalance" property="realbalance" />
+        <result column="giftbalance" property="giftbalance" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, operatetype, operator, oid, operatetime, realchange, giftchange, status, tradeno, aid, rid, realbalance, giftbalance
+    </sql>
+
+    <insert id="createAccountStatement" parameterType="com.mmd.entity.AccountStatement" useGeneratedKeys="true" keyProperty="id">
+        insert into fyt_account_statement (operatetype, operator, oid, operatetime, realchange, giftchange, realbalance, giftbalance, status, aid, rid) values (#{as.operatetype}, #{as.operator}, #{as.oid}, #{as.operatetime}, #{as.realchange}, #{as.giftchange}, #{as.realbalance}, #{as.giftbalance}, #{as.status}, #{as.aid}, #{as.rid})
+    </insert>
+
+    <update id="updateTradeNo">
+        update fyt_account_statement set tradeno = #{tradeno} where id = #{id}
+    </update>
+
+    <update id="updateAccountStatementStatus">
+        update fyt_account_statement set status = #{status} where status = 1 and id = #{aid}
+    </update>
+
+    <select id="queryAccountStatement" resultType="com.mmd.entity.AccountStatement">
+        select * from fyt_account_statement where id = #{aid}
+    </select>
+
+    <select id="queryAccountStatement4Account" resultType="com.mmd.entity.AccountStatement">
+        select * from fyt_account_statement where operatetype in (11, 12, 13, 14, 15) and operatetime>=#{beginTime} and operatetime&lt;#{endTime} and status = 2 and aid = #{aid} order by id desc
+    </select>
+
+    <select id="queryAccountStatementInCreate" resultType="com.mmd.entity.AccountStatement">
+        select * from fyt_account_statement where id = #{aid} and status=1
+    </select>
+
+    <update id="updateAccountStatement4Recharge">
+        update fyt_account_statement set realbalance = #{as.realbalance}, giftbalance = #{as.giftbalance}, status = #{as.status} where id = #{as.id}
+    </update>
+</mapper>

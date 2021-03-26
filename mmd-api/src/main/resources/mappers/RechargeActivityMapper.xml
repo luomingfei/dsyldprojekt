@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.RechargeActivityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mmd.entity.RechargeActivity">
+        <id column="id" property="id" />
+        <result column="realMoney" property="realMoney" />
+        <result column="giftMoney" property="giftMoney" />
+        <result column="info" property="info" />
+        <result column="status" property="status" />
+        <result column="createTime" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, realMoney, giftMoney, info, status, createTime
+    </sql>
+    <select id="queryRechargeByRid" resultType="com.mmd.entity.RechargeActivity">
+        select * from fyt_recharge_activity where id = #{rid}
+    </select>
+</mapper>

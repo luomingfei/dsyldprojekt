@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.MassagerMapper">
+    <select id="queryMassageOrderByDay" resultType="com.mmd.entity.OrderInfo">
+        select a.rq, a.sj, a.sl, a.did, b.lat, b.lng, c.fzsj
+        from fyt_order a
+        left join fyt_address b on a.did = b.id
+        left join fyt_product c on a.pid = c.id
+        where a.rq - UNIX_TIMESTAMP( NOW( ) ) >- 86400
+        and a.zt in (1,3,4,7,9)
+        and (a.type is null or a.type = 2 or a.type = 3)
+        and a.tid = #{tid}
+    </select>
+
+    <select id="queryMassageOrderBylastDay" resultType="com.mmd.entity.OrderInfo">
+        SELECT
+            a.rq,
+            a.sj,
+            a.sl,
+            a.did,
+            b.lat,
+            b.lng,
+            c.fzsj
+        FROM
+            fyt_order a
+            LEFT JOIN fyt_address b ON a.did = b.id
+            LEFT JOIN fyt_product c ON a.pid = c.id
+        WHERE
+            ( UNIX_TIMESTAMP( FROM_UNIXTIME( a.rq, '%Y%m%d' ) ) ) = #{stampOfDay}
+            AND a.zt IN ( 1, 3, 4, 7, 9 )
+            AND ( a.type IS NULL OR a.type = 2 OR a.type = 3 )
+            AND a.tid =  #{tid}
+        <if test="day">
+            ORDER BY a.sj desc
+        </if>
+        <if test="!day">
+            ORDER BY a.sj asc
+        </if>
+        LIMIT 1
+    </select>
+
+    <select id="getTimeRecord" resultType="com.mmd.entity.TakeUpTime">
+        select * from fyt_takeuptime where tid=#{tid}
+    </select>
+    <select id="findMassagerTimeByRqAndTid" resultType="com.mmd.entity.MassagerTime">
+        select * from fyt_tns_sj where rq=#{rq} and tid=#{tid} limit 1
+    </select>
+</mapper>

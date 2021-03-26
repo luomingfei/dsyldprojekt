@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.UserMapper">
+
+    <select id="findUserType" parameterType="java.lang.String" resultType="java.lang.String">
+        select max(id) from fyt_tns where phone=#{phone} and status = 'y' limit 1
+    </select>
+
+    <select id="findUserIdByName" parameterType="java.lang.String" resultType="java.lang.String">
+        select id from fyt_user where username=#{username} order by id desc limit 1
+    </select>
+
+    <select id="cid" parameterType="java.lang.String">
+       update fyt_user set cid=#{cid} where id=#{uid}
+    </select>
+
+    <select id="isBlackUser" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select isblack from fyt_user where id = #{uid}
+    </select>
+
+    <select id="findOpenIdByUid" parameterType="java.lang.String" resultType="java.lang.String">
+       select miniappId from fyt_openid where uid=#{uid}
+    </select>
+
+    <update id="UpdateUidByOpenid">
+       update fyt_openid set miniappId=#{openid},nickname=#{nickname},city=#{city},headimgurl=#{headimgurl},country=#{country},province=#{province} where uid=#{uid}
+    </update>
+
+    <update id="UpdateUidBynewOpenid">
+       update fyt_openid set openid=#{openid} where uid=#{uid}
+    </update>
+
+    <select id="findCitys" resultType="com.mmd.entity.City">
+        SELECT * FROM fyt_city ORDER BY sort
+    </select>
+    <select id="findUserNameById" resultType="java.lang.String">
+    select username from fyt_user where id=#{uid}
+    </select>
+
+    <insert id="addUser" parameterType="com.mmd.entity.MyUser" useGeneratedKeys="true" keyProperty="id">
+        insert into fyt_user(username) values (#{c.username})
+    </insert>
+
+    <insert id="AddEstimation">
+        insert into fyt_tns_pj(uid,tid,pjlx,createtime,oid,pjnr,pjlevel,skill,attitude,onTime) values (#{e.uid},#{e.tid},#{e.pjlx},#{e.createtime},#{e.oid},#{e.pjnr},#{e.pjlevel},#{e.skill},#{e.attitude},#{e.onTime})
+    </insert>
+
+    <select id="findEstimation" resultType="com.mmd.entity.Estimation">
+        select * from fyt_tns_pj where uid=#{uid} and oid=#{oid}
+    </select>
+
+    <update id="updateOpenidByUid">
+       update fyt_openid set uid=#{uid} where openid=#{openid}
+    </update>
+
+    <update id="UpdateOrderZt">
+        update fyt_order set zt=#{ztTo} where id=#{orderId} and zt=#{ztNow}
+    </update>
+
+    <update id="UpdateOrderZt4Assign">
+        update fyt_order set zt=#{ztTo},assigntime=unix_timestamp(now()) where id=#{orderId} and zt=#{ztNow}
+    </update>
+
+    <select id="findTagsGrouped" resultType="com.mmd.entity.TagGroupedEntity">
+        select distinct(tag) from fyt_tns_tags where tid=#{tid}
+    </select>
+    <select id="findTagCount" resultType="int">
+        select count(id) from fyt_tns_tags where tid=#{tid} and tag=#{tag}
+    </select>
+</mapper>

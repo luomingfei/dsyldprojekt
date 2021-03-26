@@ -1,0 +1,106 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1000
+    max-connections: 20000
+    min-spare-threads: 30
+  port: 8050
+
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://120.79.49.89:3306/wx?useAffectedRows=true&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true
+      username: root
+      password: dd0624
+      initial-size: 10
+      max-active: 100
+      min-idle: 10
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        #login-username: admin
+        #login-password: admin
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+        wall:
+          config:
+           multi-statement-allow: true
+
+ALI:
+  APPID: 2021001185631060
+  PRIVATEKEY: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCUdYDkpdzBBOQC1C7KapjSA/TFWOtZfmJFudPg5PL8TnvsI+KuvW8dTtnwvdRGE0CEKZxNsdK75iG7lICiLBehhAjf5jG//IAwNTLb1vSKqLEksunVf/4jeIgD1CTWZuqbiOP0GTvKvGaH2L6EGie6mHLDO/wksxHdRktT/QC+jxRX32eYm094sQCKVOLg3MIyyRz62zD95x+Kvuf49+91eAFh7uJxq9rj5IJJK2YFMjINkPeP9DJQpiJSDCmoRo6UE2gFLC3Il5ENv7ZtUuvyqAWtW2eZrajmOV5Xkg4bRY+zqI6NZR3MoHp9Uorsj0knUmjLYfZUl7G9a4XB03VrAgMBAAECggEATyA5rKRCfpYOuPtCXRxnizgUk8KK3c4grq0Wor0kTRm/ruKJhTzuJh7KxidHJnpIXqiW6Eoo2YEU5ZeG3+jER4/J8xwL1BnOcONJ0iZFfEng8IBzZRms6Fbrl67QW33K+U8CwC1a0vmLZEg/csVF+4wZTrl/8EeI8/jtWTx10xo7LaFOugP0DmhgjSOQWVS5XWnL1ZI2Lk4Zfb1WCzEZUg5QENLaNzzVMt/ojZMTK48N6JAPhCwfpEordEFWUQojwgrjlufN+IUv029PqWBiGxmQnVNWtVdommP3LUkYh+sRTCumHjy0YDxX1fJj41GHOkVThkUiDYdQAf+iwec8MQKBgQDP4xzQZ+vwR+Wx9Gqk1LfUMl6OiBxNb4/Q4kBtFeeZ7IBRDajpaZUrsw5jLkgkBYt4BCk5gsmkD2CvmyIzPwxqdAEVtzcMGmXctZwcj5NZL9aaBCuvTNawhtj9KdgJf+2NCMC4zPXfIC2ChCSsLJYosGfQmx81ND1ckVNrwtQh/wKBgQC20WT30eb0OrbhqpiwjF0UNrcXPYIEOYOIFsYhHkI2DltkDk30Jl03A00HzYLvdJca9R5zzrntA+KrpIMxILYRVSDdZQxUHaiuFLCWVCAGpmnZmmlegD58D3yg5uXRLfR1tVIHfJtCCb3EbyEptmQj2hos7NCj8AuMyhCXVsxUlQKBgDUKPCLMMP14SpmRw9fUUia4xzlUbuwu56Gi6E8sxI+YMND9TDhpcN7aa3RQraVLKN9xKFd9EBdkuQV07k/m6TML7+7rdQcIgS7Dw1XiJ/UcaIOZRtAOKcSWUyycjXs3AZP3RLyhxqWsHxBqyLSJF7K/92zY9yhq8LD6fy9CYT9fAoGAMT/Rmm1CcXLLx5lEjvMRNBvVUP5x4x93TpcMAun63kMZ3ad42pfnLqXF/58ecdGPz2RPMtVzAuW0D5c+/GIaiirLsrjBDHv88ACE3cqF4iS8iTFux1V2/8bQRSxOpv5hR8Bz+65WyQCEzcE+RtVqvrnHqWiWgENvaRsaQxrP6s0CgYEAmcYt7gR5avvzqcgRpIVWDkb2EIQFBfg5OAqBWoVdlzuRKIOkg7KGH5o08MDyy8Gb+zWBwkmPuaCPLCDaMcBNmYCRPx95m924S0MAuk0K3e8nyznC4hQFu5C/YQhBzkiBCaM97ZyQryn8LZAbev5ddTRDQR7gCfSVqOSaW3YfD4A=
+  PUBLICKEY: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlHWA5KXcwQTkAtQuymqY0gP0xVjrWX5iRbnT4OTy/E577CPirr1vHU7Z8L3URhNAhCmcTbHSu+Yhu5SAoiwXoYQI3+Yxv/yAMDUy29b0iqixJLLp1X/+I3iIA9Qk1mbqm4jj9Bk7yrxmh9i+hBonuphywzv8JLMR3UZLU/0Avo8UV99nmJtPeLEAilTi4NzCMskc+tsw/ecfir7n+PfvdXgBYe7icava4+SCSStmBTIyDZD3j/QyUKYiUgwpqEaOlBNoBSwtyJeRDb+2bVLr8qgFrVtnma2o5jleV5IOG0WPs6iOjWUdzKB6fVKK7I9JJ1Joy2H2VJexvWuFwdN1awIDAQAB
+  GATEWAY_URL: https://openapi.alipay.com/gateway.do
+  SIGN: RSA2
+  notify_url: http://www.mmdam.com/weixin/
+#  APP_CERT_PATH: F:\momoda\CSR\appCertPublicKey_2021001185631060.crt
+#  ALIPAY_CERT_PATH: F:\momoda\CSR\alipayCertPublicKey_RSA2.crt
+#  ALIPAY_ROOT_CERT_PATH: F:\momoda\CSR\alipayRootCert.crt
+  APP_CERT_PATH: /usr/local/project/csr/appCertPublicKey_2021001185631060.crt
+  ALIPAY_CERT_PATH: /usr/local/project/csr/alipayCertPublicKey_RSA2.crt
+  ALIPAY_ROOT_CERT_PATH: /usr/local/project/csr/alipayRootCert.crt
+
+
+wx:
+  url: http://www.mmdam.com/weixin/
+  mch-id: 1237166302
+  key: 48888888888888888888888888888abc
+  miniapp:
+    appid: wx015b0134a7391f0e
+    secret: e77c07dd8c1fefb0871ec892508fb0fe
+  mp:
+    token: baoyong
+    appid: wx0f07ae645c1a1cf7
+    secret: 6348ad946862e2d556b6e4cefe887fec
+    aesKey: C1KUG56VYQAymDOO8vAk5uqVxADpUrvCUteLCr0yf2C
+
+mybatis-plus:
+  mapper-locations: classpath*:mappers/*.xml
+  global-config:
+    db-config:
+      field-strategy: ignored
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    jdbc-type-for-null: null
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    root:  ERROR
+    org.springframework:  ERROR
+    org.mybatis:  ERROR
+    com.mmd.controller.controller: DEBUG
+    com.mmd: DEBUG
+
+swagger:
+  title: 魔魔达
+  basePackage: com.mmd.controller
+  enable: true
+step-security:
+  jwt:
+    secret: step-security-step-security-step-security-step-security-step-security-step-security-step-security # 秘钥
+    algorithm: hs512 # 加密算法
+    expiration-in-second: 1209600 # 过期时间
+
+

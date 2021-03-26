@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.TnsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mmd.entity.Tns">
+        <id column="id" property="id"/>
+        <result column="xm" property="xm"/>
+        <result column="xb" property="xb"/>
+        <result column="wz" property="wz"/>
+        <result column="tx" property="tx"/>
+        <result column="fwqy" property="fwqy"/>
+        <result column="gzjy" property="gzjy"/>
+        <result column="status" property="status"/>
+        <result column="createtime" property="createtime"/>
+        <result column="age" property="age"/>
+        <result column="phone" property="phone"/>
+        <result column="city" property="city"/>
+        <result column="location" property="location"/>
+        <result column="cylx" property="cylx"/>
+        <result column="sfsm" property="sfsm"/>
+        <result column="openid" property="openid"/>
+        <result column="sid" property="sid"/>
+        <result column="ljxd" property="ljxd"/>
+        <result column="hoursalary" property="hoursalary"/>
+        <result column="minsalary" property="minsalary"/>
+        <result column="type" property="type"/>
+        <result column="password" property="password"/>
+        <result column="level" property="level"/>
+        <result column="uid" property="uid"/>
+        <result column="orderrange" property="orderrange"/>
+        <result column="laterDot" property="laterDot"/>
+        <result column="laterRange" property="laterRange"/>
+        <result column="isblack" property="isblack"/>
+        <result column="profession" property="profession"/>
+        <result column="inRemark" property="inRemark"/>
+        <result column="isRecommend" property="isRecommend"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, xm, xb, wz, tx, fwqy, gzjy, status, createtime, age, phone, city, location, cylx, sfsm, openid, sid, ljxd, hoursalary, minsalary, type, password, level, uid, orderrange, laterDot, laterRange, isblack, profession, inRemark, isRecommend
+    </sql>
+    <select id="findById" resultType="com.mmd.domain.dto.order.MassagerDTO">
+        select * from fyt_tns where id= #{massagerId}
+    </select>
+    <select id="findSidByMassagerId" resultType="String">
+        select sid from fyt_tns where id= #{massagerId}
+    </select>
+    <select id="findByCityIdAndKeyword" resultType="com.mmd.entity.Massager">
+             select * from fyt_tns where city=(select mc from fyt_city where id=#{city}) and `status`='y'
+              <if test="keyword !=null and keyword.trim()!=''">
+                  and xm like '%${keyword}%'
+              </if>
+              <if test="tid !=null">
+                    and id = #{tid}
+              </if>
+               and type in ${type}
+               ORDER BY createtime DESC
+    </select>
+
+    <select id="getMyMassagers4JiaShiNolevelNosex" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where type=1 and `status`='y' and id in (select distinct tid from fyt_order where tid &lt;&gt; 0 and uid = #{uid}) limit 5
+    </select>
+    <select id="getMyMassagers4JiaShiNolevelSex" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where type=1 and `status`='y' and xb=#{sex} id in (select distinct tid from fyt_order where tid &lt;&gt; 0 and uid = #{uid}) limit 5
+    </select>
+
+    <select id="getMyMassagers4JiaShiLevelNosex" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where type=1 and `status`='y' and level=#{level} and id in (select distinct tid from fyt_order where tid &lt;&gt; 0 and uid = #{uid}) limit 5
+    </select>
+
+    <select id="getMyMassagersNolevelNosex" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where find_in_set(#{pid}, sid) and type=1 and `status`='y' and id in (select distinct tid from fyt_order where tid &lt;&gt; 0 and uid = #{uid}) limit 5
+    </select>
+
+    <select id="getAvailableMassagersNolevelNosexCityAndPid" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where city=#{city} and find_in_set(#{pid}, sid) and type=1 and `status`='y'
+    </select>
+
+    <select id="getMyMassagersNolevelSex" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where find_in_set(#{pid}, sid) and type=1 and `status`='y' and xb=#{sex} and id in (select distinct tid from fyt_order where tid &lt;&gt; 0 and uid = #{uid}) limit 5
+    </select>
+    <select id="getAvailableMassagersNolevelSex" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where city=#{city} and find_in_set(#{pid}, sid) and type=1 and `status`='y' and xb=#{sex}
+    </select>
+    <select id="getMyMassagersLevelNosex" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where find_in_set(#{pid}, sid) and type=1 and `status`='y' and level=#{level} and id in (select distinct tid from fyt_order where tid &lt;&gt; 0 and uid = #{uid}) limit 5
+    </select>
+    <select id="getAvailableMassagersLevelNosex" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where city=#{city} and find_in_set(#{pid}, sid) and type=1 and `status`='y' and level=#{level}
+    </select>
+    <select id="getMyMassagersLevelSex" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where find_in_set(#{pid}, sid) and type=1 and `status`='y' and level=#{level} and xb=#{sex} and id in (select distinct tid from fyt_order where tid &lt;&gt; 0 and uid = #{uid}) limit 5
+    </select>
+    <select id="getAvailableMassagersLevelSex" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where city=#{city} and find_in_set(#{pid}, sid) and type=1 and `status`='y' and level=#{level} and xb=#{sex}
+    </select>
+    <select id="queryLevelRefer" resultType="com.mmd.entity.LevelRefer">
+        select * from fyt_tns_level_refer where lid = #{lid} and pid = #{pid}
+    </select>
+    <select id="queryMassager4Comment" resultType="com.mmd.entity.Massager">
+  select * from fyt_tns t left join (select tid, count(*) as pjnum from fyt_tns_pj group by tid) pj on t.id = pj.tid where t.status = 'y' and t.xm like '%${keyword}%' and t.city = #{city} order by t.isRecommend desc,pj.pjnum desc
+    </select>
+    <select id="queryMassager4CommentByType" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns t left join (select tid, count(*) as pjnum from fyt_tns_pj group by tid) pj on t.id = pj.tid where t.status = 'y' and t.xm like '%${keyword}%' and t.city = #{city} and t.type in ${type} order by t.isRecommend desc,pj.pjnum desc
+    </select>
+    <select id="queryMassager4Distance" resultType="com.mmd.entity.Massager">
+
+        select * from fyt_tns where status = 'y' and city = #{city}
+        <if test="keyword!=null">
+            and xm like '%${keyword}%'
+        </if>
+    </select>
+    <select id="queryMassager4DistanceByType" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where status = 'y' and city = #{city}
+         <if test="keyword!=null">
+        and xm like '%${keyword}%'
+        </if>
+     and type in ${type}
+    </select>
+    <select id="findByMassagerId" resultType="com.mmd.domain.dto.output.TnsOutputDTO">
+        select * from fyt_tns where id= #{massagerId}
+    </select>
+    <select id="getStoreMassagersNolevelNosex" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where find_in_set(#{pid}, sid) and `status`='y' and id in (select tid from fyt_store_tns where sid = #{sid})
+    </select>
+    <select id="getStoreMassagersLevelNosex" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where find_in_set(#{pid}, sid) and `status`='y' and level = #{level} and id in (select tid from fyt_store_tns where sid = #{sid})
+    </select>
+    <select id="getStoreMassagersNolevelSex" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where find_in_set(#{pid}, sid) and `status`='y' and xb=#{sex} and id in (select tid from fyt_store_tns where sid = #{sid})
+    </select>
+    <select id="getStoreMassagersLevelSex" resultType="com.mmd.entity.Massager">
+        select * from fyt_tns where find_in_set(#{pid}, sid) and `status`='y' and level = #{level} and xb=#{sex} and id in (select tid from fyt_store_tns where sid = #{sid})
+    </select>
+</mapper>

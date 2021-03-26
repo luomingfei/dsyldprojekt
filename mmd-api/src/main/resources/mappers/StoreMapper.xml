@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.StoreMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mmd.entity.Store">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="photo" property="photo" />
+        <result column="coord" property="coord" />
+        <result column="status" property="status" />
+        <result column="info" property="info" />
+        <result column="phone" property="phone" />
+        <result column="cover" property="cover" />
+        <result column="address" property="address" />
+        <result column="city" property="city" />
+        <result column="level" property="level" />
+        <result column="pids" property="pids" />
+        <result column="managerId" property="managerId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, photo, coord, status, info, phone, cover, address, city, level, pids, managerId
+    </sql>
+
+    <select id="queryStoreById" resultType="com.mmd.entity.Store">
+        select * from fyt_store where id = #{sid}
+    </select>
+    <select id="selectTnsIds" resultType="java.lang.Integer">
+        select tid from fyt_store_tns where sid = #{sid}
+    </select>
+
+    <select id="findByMassagerId" resultType="com.mmd.domain.dto.output.TnsOutputDTO">
+        select * from fyt_tns where id= #{massagerId} and status = 'y'
+    </select>
+
+    <insert id="addAddressNew" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into fyt_address(addressDetail,contact,uid,mph,phone,lng,lat,type) values (#{a.addressDetail},#{a.contact},#{a.uid},#{a.mph},#{a.phone},#{a.lng},#{a.lat},#{a.type})
+    </insert>
+    <insert id="AddAddress" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into fyt_address(addressDetail,contact,uid,mph,phone,lng,lat,way) values (#{a.addressDetail},#{a.contact},#{a.uid},#{a.mph},#{a.phone},#{a.lng},#{a.lat},#{a.way})
+    </insert>
+    <select id="getStoreTidsBySid" resultType="com.mmd.entity.Store">
+        select tid from fyt_store_tns where sid = #{sid}
+    </select>
+
+    <select id="getStores4Massager" resultType="com.mmd.entity.Store">
+        select * from fyt_store where city = (select mc from fyt_city where id = #{cid}) and status = 0 and id in (select sid from fyt_store_tns where tid = #{tid})
+    </select>
+
+    <select id="getStores4Product" resultType="com.mmd.entity.Store">
+        select * from fyt_store where city = (select mc from fyt_city where id = #{cid}) and find_in_set(#{pid}, pids) and status = 0
+    </select>
+
+</mapper>

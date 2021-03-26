@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.TnsSjMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mmd.entity.TnsSj">
+        <id column="id" property="id" />
+        <result column="tid" property="tid" />
+        <result column="rq" property="rq" />
+        <result column="sj" property="sj" />
+        <result column="createtime" property="createtime" />
+        <result column="updatetime" property="updatetime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tid, rq, sj, createtime, updatetime
+    </sql>
+    <select id="findMassagerTimeByRqAndTid" resultType="com.mmd.entity.MassagerTime">
+        select * from fyt_tns_sj where rq=#{rq} and tid=#{tid} limit 1
+    </select>
+
+    <select id="queryLevelInfoByPid" resultType="com.mmd.entity.LevelInfo">
+        select a.lid, b.info, a.extra from fyt_tns_level_refer a left join fyt_tns_level b on a.lid = b.id where a.pid = #{pid} order by a.extra
+    </select>
+    <insert id="addMassagerTime">
+        insert into fyt_tns_sj(tid,rq,sj,createtime,updatetime) values (#{time.tid},#{time.rq},#{time.sj},UNIX_TIMESTAMP(NOW()),UNIX_TIMESTAMP(NOW()))
+    </insert>
+    
+    <update id="updateMassagerTime">
+        update fyt_tns_sj set sj=#{time.sj},updatetime=UNIX_TIMESTAMP(NOW()) where tid=#{time.tid} and rq=#{time.rq}
+    </update>
+</mapper>

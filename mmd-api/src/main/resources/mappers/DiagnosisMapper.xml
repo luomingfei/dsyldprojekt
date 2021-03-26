@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.DiagnosisMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mmd.entity.Diagnosis">
+        <id column="id" property="id" />
+        <result column="uid" property="uid" />
+        <result column="tid" property="tid" />
+        <result column="oid" property="oid" />
+        <result column="symptom" property="symptom" />
+        <result column="suggestion" property="suggestion" />
+        <result column="createtime" property="createtime" />
+        <result column="chat" property="chat" />
+        <result column="strength" property="strength" />
+        <result column="health" property="health" />
+        <result column="body" property="body" />
+        <result column="product" property="product" />
+        <result column="other" property="other" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, uid, tid, oid, symptom, suggestion, createtime, chat, strength, health, body, product, other
+    </sql>
+
+    <select id="getDiagnosisListByOid" resultType="com.mmd.entity.Diagnosis">
+        select d.*,p.xmmc as orderProductName,t.xm as tnsName from fyt_diagnosis d left join fyt_order o on d.oid = o.id left join fyt_product p on o.pid=p.id LEFT JOIN fyt_tns t on d.tid=t.id where d.oid = #{orderId}
+    </select>
+    <select id="getDiagnosisCount" resultType="int">
+        select count(1) from fyt_diagnosis d left join fyt_order o on d.oid=o.id where d.tid=#{tid} and o.rq>=#{beginTime} and o.rq&lt;#{endTime}
+    </select>
+    <select id="findDiagnosisById" resultType="com.mmd.domain.dto.output.DiagnosisOutputDTO">
+        select d.*,p.xmmc as orderProductName,t.xm as tnsName from fyt_diagnosis d left join fyt_order o on d.oid = o.id left join fyt_product p on o.pid=p.id LEFT JOIN fyt_tns t on d.tid=t.id  where d.id=#{id}
+    </select>
+
+</mapper>

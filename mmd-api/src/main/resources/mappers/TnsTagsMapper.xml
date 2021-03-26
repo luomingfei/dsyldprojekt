@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.TnsTagsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.mmd.entity.TnsTags">
+        <id column="id" property="id" />
+        <result column="tid" property="tid" />
+        <result column="tag" property="tag" />
+        <result column="pjid" property="pjid" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, tid, tag, pjid
+    </sql>
+    <insert id="addTag" parameterType="com.mmd.domain.dto.comment.Tag">
+        insert into fyt_tns_tags (tid,tag,pjid) values(#{t.tid},#{t.tag},#{t.pjid})
+    </insert>
+    <select id="findTagsAndCount" resultType="com.mmd.domain.dto.massagist.MassagistDTO">
+      select tag,count(1) as count from fyt_tns_tags where tid=#{tid} group by tag order by count desc
+    </select>
+    <select id="findTagsGrouped" resultType="com.mmd.domain.dto.massagist.MassagistDTO">
+        select distinct(tag) from fyt_tns_tags where tid=#{tid}
+    </select>
+    <select id="findTagCount" resultType="java.lang.Integer">
+        select count(id) from fyt_tns_tags where tid=#{tid} and tag=#{tag}
+    </select>
+
+</mapper>

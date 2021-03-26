@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mmd.dao.ProductSexMapper">
+    <select id="findProductSexByCityId" resultType="com.mmd.entity.ProductSex">
+        select * from fyt_product_sex s LEFT JOIN fyt_product p on s.pid=p.id left join fyt_city c on p.city=c.mc where c.id=#{cityId} order by s.id desc
+    </select>
+
+    <select id="findProductSexByPid" resultType="com.mmd.entity.ProductSex">
+        select * from fyt_product_sex where pid=#{pid} order by id desc limit 1
+    </select>
+</mapper>
